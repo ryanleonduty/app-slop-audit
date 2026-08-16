@@ -1,0 +1,39 @@
+{
+  "skill": "app-slop-audit",
+  "cases": [
+    {
+      "id": "code-scan-catches-slop",
+      "prompt": "Audit this SwiftUI app for slop. It has .tint(.purple) on the toolbar, RoundedRectangle(cornerRadius: 16) around every row, .font(.body) on all text, and ProgressView() blocking full-screen. Give me a numbered slop inventory and anti-slop fixes with a scored index.",
+      "asserts": [
+        "inventory contains an 'AI-purple accent / .tint(.purple)' finding",
+        "inventory contains a 'card overload / rounded-rect' finding",
+        "inventory contains a 'flat type scale' finding",
+        "inventory contains a 'blocking spinner' finding",
+        "every finding has a concrete SwiftUI/HIG fix (e.g. .tint(.emerald), one containment idiom)",
+        "audit reports a numeric 0-100 slop index",
+        "fixes are NOT applied automatically (audit-first, no code changed)"
+      ]
+    },
+    {
+      "id": "context-respects-deliberate-choice",
+      "prompt": "Review the design quality of a macOS power-user utility. Its unusual custom control is intentional per the team, and the brutalist dense layout is documented as a product decision. Don't flag those. Score the rest for slop.",
+      "asserts": [
+        "does NOT flag the deliberate custom control as CRITICAL slop",
+        "does NOT demand the brutalist layout be 'cleaned up'",
+        "still reports real slop findings and a numeric index",
+        "acknowledges the intentional decisions in the report"
+      ]
+    },
+    {
+      "id": "rendered-visual-read",
+      "prompt": "Here is a screenshot of my macOS settings panel. It has cream/beige cards, a brass accent, espresso text, and three equal feature cards. Assess its design quality and suggest anti-slop fixes with a score.",
+      "asserts": [
+        "identifies the 'warm-beige premium autopilot' visual palette",
+        "identifies 'equal-sided card grid' layout slop",
+        "gives a numeric slop index",
+        "fixes are Apple-HIG-aware (semantic colors, real hierarchy)",
+        "confirms evidence is from the rendered image, not source"
+      ]
+    }
+  ]
+}

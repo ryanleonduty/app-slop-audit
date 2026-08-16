@@ -1,0 +1,23 @@
+{
+  "name": "app-slop-audit",
+  "description": "Audit native macOS/iOS apps (SwiftUI/AppKit) for UI slop - generic, templated, AI-default design - and produce a numbered slop inventory, anti-slop fixes, and a 0-100 slop index.",
+  "version": "1.0.0",
+  "author": {
+    "name": "ryanleonduty",
+    "email": ""
+  },
+  "homepage": "https://github.com/ryanleonduty/app-slop-audit",
+  "repository": "https://github.com/ryanleonduty/app-slop-audit",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "macos",
+    "ios",
+    "swiftui",
+    "appkit",
+    "design",
+    "audit",
+    "slop",
+    "hig"
+  ]
+}

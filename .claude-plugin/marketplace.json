@@ -1,0 +1,20 @@
+{
+  "name": "app-slop-audit",
+  "description": "Native Apple app design slop audit for Claude Code - SwiftUI/AppKit",
+  "owner": {
+    "name": "ryanleonduty",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "app-slop-audit",
+      "description": "Audit native macOS/iOS apps (SwiftUI/AppKit) for UI slop - generic, templated, AI-default design - and produce a numbered slop inventory, anti-slop fixes, and a 0-100 slop index.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "ryanleonduty",
+        "email": ""
+      }
+    }
+  ]
+}
