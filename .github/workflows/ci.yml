@@ -23,24 +23,25 @@ jobs:
       - name: Validate example findings schema
         run: python3 skills/app-slop-audit/scripts/score_slop.py --validate examples/findings.json
 
-      # 3. Weights/pattern ids in patterns.json must be internally consistent.
+      # 3. Weights/pattern ids in patterns.json must be internally consistent, and every
+      #    register title must read as an entry in the prose catalog.
       - name: Check patterns.json register integrity
-        run: python3 - <<'PY'
-          import json, sys
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
           cfg = json.load(open("skills/app-slop-audit/references/patterns.json"))
           ids = [p["id"] for p in cfg["patterns"]]
           assert len(ids) == len(set(ids)), "duplicate pattern ids"
           for p in cfg["patterns"]:
               assert p["severity"] in cfg["severity_weights"], p["id"]
               assert p["category"] in cfg["category_weights"], p["id"]
-          # Every register title must read as an entry in the prose catalog, so the
-          # machine register never invents a pattern the human catalog doesn't describe.
-          import re
-          def norm(s): return re.sub(r"[^a-z0-9]", "", s.lower())
+          def norm(s):
+              return re.sub(r"[^a-z0-9]", "", s.lower())
           prose = norm(open("skills/app-slop-audit/references/slop-patterns.md", encoding="utf-8").read())
           missing = [p["title"] for p in cfg["patterns"] if norm(p["title"]) not in prose]
           assert not missing, f"titles without a prose entry: {missing}"
-          print(f"patterns.json OK: {len(ids)} ids, weights consistent, all titles in prose catalog")
+          print(f"patterns.json OK: {len(ids)} ids, weights consistent, all titles in prose")
           PY
 
       # 4. The example report must be reproducible from the fixture via the scorer.
@@ -51,6 +52,6 @@ jobs:
           import json
           expected = json.load(open("examples/report.json"))
           actual = json.load(open("/tmp/report.json"))
-          assert expected == actual, "examples/report.json is stale — regenerate from the fixture"
+          assert expected == actual, "examples/report.json is stale - regenerate from the fixture"
           print("examples/report.json is current")
           PY
