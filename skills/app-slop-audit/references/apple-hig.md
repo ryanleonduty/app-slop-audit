@@ -4,6 +4,16 @@ The native targets for the anti-slop fixes. Skim as needed; full authority is Ap
 Human Interface Guidelines. These are the macOS/iOS-native verbs to offer as replacements —
 not generic "make it prettier".
 
+## Modern surfaces (macOS Tahoe / iOS 26+)
+- **Liquid Glass** — `.glassEffect()` / `.glassEffectGrouped()` communicate layered context: inspector
+  and detached panels, transient chrome, content over a scrolling backdrop. Do NOT put glass behind
+  content that sits directly on a solid surface — default those to flat `.background`/`.fill` sheets and
+  semantic colors. Glass without real depth behind it is decoration, and reads as the default template.
+- **iOS accent** — set a deliberate `tint`/`accentColor` from the brand instead of leaving system blue.
+  System blue is fine for system-provided interactive elements; don't make it the app's whole identity.
+- **Navigation fit** — `TabView` only for 2-5 genuine peer sections; use `NavigationStack` for
+  drill-down depth. Chrome should match content, never the reverse.
+
 ## macOS chrome (macOS-specific)
 - **Sidebar** — `NavigationSplitView` with a `List` as sidebar for app-level navigation. Use `.navigationTitle` + `.navigationSubtitle` for context. Sidebar selects one content pane; don't cram a second nav into it.
 - **Toolbar** — `.toolbar { ToolbarItem(placement: .primaryAction) }` for the main action, `.secondaryAction` for lesser. Keep the default action prominent.

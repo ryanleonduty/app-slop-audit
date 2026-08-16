@@ -56,8 +56,8 @@ Given an app (source path, screenshot, or both), `app-slop-audit`:
 
 ```json
 {
-  "slop_index": 22.4,
-  "grade": "LEAN — minor inconsistencies only.",
+  "slop_index": 14.1,
+  "grade": "CLEAN — reads intentional and platform-native.",
   "finding_count": 2,
   "categories": {
     "color":       { "count": 1, "weighted": 3.0 },
@@ -75,19 +75,23 @@ The skill lives in `skills/app-slop-audit/`.
 | File | Purpose |
 | --- | --- |
 | `SKILL.md` | Entry point - when to use, the workflow, scope, and hard rules. |
-| `references/slop-patterns.md` | The detection catalog. Each pattern lists a code signal, a visual signal, a severity, and an anti-slop fix. |
-| `references/apple-hig.md` | Apple HIG-native replacements: SF Pro typography, semantic colors, macOS chrome, native controls, accessibility gates. |
+| `references/slop-patterns.md` | The detection catalog. Each pattern lists a code signal, a visual signal, a severity, and an anti-slop fix. Includes Liquid Glass + iOS tells and an AppKit scope note. |
+| `references/apple-hig.md` | Apple HIG-native replacements: SF Pro typography, semantic colors, macOS chrome, modern surfaces (Liquid Glass/iOS), accessibility gates. |
 | `references/scan-methods.md` | How to gather evidence for each input route (code / screenshot / both) and when to reconcile. |
-| `scripts/score_slop.py` | Deterministic scorer: `cat findings.json \| python3 scripts/score_slop.py` → index + grade + breakdown. |
+| `references/patterns.json` | **Machine-readable single source of truth**: 33 pattern ids, severity/category/evidence weights, and the scoring ceiling. Score.py reads this and never hardcodes a weight. |
+| `scripts/score_slop.py` | Deterministic scorer: `cat findings.json \| python3 scripts/score_slop.py` → index + grade + breakdown. Adds `--validate`, evidence weighting, and before/after delta. |
+| `tests/test_score_slop.py` | Self-running unit tests for the scorer (no dependencies; runs in CI). |
+| `examples/findings.json` + `examples/report.json` | A worked example audit and its generated report (regenerated in CI). |
 | `agents/grader.md` | Eval grader agent that scores a run against the assertion set. |
 | `evals/evals.json` | Evaluations - concrete cases with PASS/FAIL assertions for verifying behavior. |
+| `.github/workflows/ci.yml` | CI: unit tests + schema validation + register integrity + report reproducibility. |
 
 ### Detected pattern categories (from `slop-patterns.md`)
 
 - **A. Typography & type hierarchy** - flat type scales, bold-as-only-emphasis, serif-for-creative
   autopilot, monospace misuse.
-- **B. Color** - AI-purple/blue default accents, warm-beige "premium" autopilot, hardcoded RGB
-  that ignores dark mode.
+- **B. Color** - AI-purple/blue default accents, warm-beige "premium" autopilot, hardcoded RGB that
+  ignores dark mode.
 - **C. Material & cards** - card soup, rounded-rect-on-everything, frosted material over flat content.
 - **D. Layout** - centered floating controls in a void, equal-sided feature grids, fixed widths that clip.
 - **E. Controls & affordance** - no visible primary CTA, icon-only toolbars with no tooltip,
@@ -95,13 +99,27 @@ The skill lives in `skills/app-slop-audit/`.
 - **F. State & motion** - blocking full-screen spinners, ambient forever-loops, un-reactive items.
 - **G. Content & accessibility** - placeholder/lorem data, hardcoded light-only colors, stripped
   focus rings (both CRITICAL, not nits).
+- **J. Modern OS tells** - Liquid Glass on everything (`iOS 26`/`macOS Tahoe`), default iOS system-blue
+  tint, `TabView`-as-default navigation, custom gestures that fight system gestures, sheet vs
+  full-screen misuse.
 
 ### Scoring model (`score_slop.py`)
 
 The index is derived from **categories**, not raw finding count, so fixing one systemic lever lifts
-the whole index. Severities weight findings (`CRITICAL` > `HIGH` > `MEDIUM` > `LOW`), and
-accessibility defects count extra. Finding count is capped so a long trivial list can't dominate.
-The output is always reproducible from the same findings JSON.
+the whole index. All weights live in `references/patterns.json` (single source of truth); the script
+never hardcodes one. Three knobs combine:
+
+- **Severity** - `CRITICAL` > `HIGH` > `MEDIUM` > `LOW`; accessibility defects count extra.
+- **Evidence confidence** - a `screenshot`-only read is discounted (uncertain, `0.8`), `code` is the
+  baseline (`1.0`), and a `combined` code-confirmed-from-render finding counts most (`1.15`). Omitted
+  source defaults to `code`, so legacy findings score exactly as before.
+- **Count cap** - finding count is capped so a long trivial list can't dominate.
+
+**Before/after regressions.** Pass `{"before": [...], "after": [...]}` to the scorer; it returns each
+index plus a `delta` (negative = improvement), so a redesign can be measured, not felt.
+
+The output is always reproducible from the same findings JSON. See `examples/findings.json` →
+`examples/report.json` for a worked example.
 
 ---
 

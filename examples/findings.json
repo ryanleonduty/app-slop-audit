@@ -1,0 +1,92 @@
+[
+  {
+    "id": "ai-purple-blue-accent",
+    "category": "color",
+    "pattern": "AI-purple accent defaults",
+    "severity": "HIGH",
+    "source": "code",
+    "evidence": "DashboardView.swift:12",
+    "fix": "Drop .tint(.purple); use one high-contrast brand accent (emerald), saturation < 80%."
+  },
+  {
+    "id": "hardcoded-light-only-colors",
+    "category": "color",
+    "pattern": "Hardcoded light-only background",
+    "severity": "CRITICAL",
+    "source": "combined",
+    "evidence": "DashboardView.swift:18 + dark-mode render",
+    "fix": "Replace Color(red::) with semantic system colors (.background, .primary/.secondary) so dark mode adapts."
+  },
+  {
+    "id": "type-flat-scale",
+    "category": "typography",
+    "pattern": "Flat type scale",
+    "severity": "HIGH",
+    "source": "combined",
+    "evidence": "DashboardView.swift:34 + screenshot",
+    "fix": "Lead sections with .title2, content .body, metadata .caption; lead at least 4 steps above body."
+  },
+  {
+    "id": "rounded-rect-card-overload",
+    "category": "material",
+    "pattern": "Rounded-rect card overload",
+    "severity": "HIGH",
+    "source": "code",
+    "evidence": "DashboardView.swift:27, 41, 66",
+    "fix": "Keep one containment idiom for one content layer; let secondary rows sit flat."
+  },
+  {
+    "id": "liquid-glass-overuse",
+    "category": "material",
+    "pattern": "Liquid Glass on every pane",
+    "severity": "HIGH",
+    "source": "screenshot",
+    "evidence": "main-window-screen.png",
+    "fix": "Restrict .glassEffect/.glassEffectGrouped in context; default to flat .background/.fill sheets."
+  },
+  {
+    "id": "floating-centered-island",
+    "category": "layout",
+    "pattern": "Floating centered island",
+    "severity": "HIGH",
+    "source": "code",
+    "evidence": "DashboardView.swift:70",
+    "fix": "Use real app chrome (toolbar + NavigationSplitView sidebar); distribute controls by task importance."
+  },
+  {
+    "id": "plain-button-everything",
+    "category": "controls",
+    "pattern": "Plain-button everything",
+    "severity": "HIGH",
+    "source": "code",
+    "evidence": "DashboardView.swift:88",
+    "fix": ".borderedProminent for the primary action, .bordered for secondaries, .plain only in toolbars."
+  },
+  {
+    "id": "icon-only-no-label",
+    "category": "controls",
+    "pattern": "Icon-only toolbar, no tooltip",
+    "severity": "CRITICAL",
+    "source": "code",
+    "evidence": "ToolbarView.swift:5",
+    "fix": "Add .help(Text(...)) on macOS and accessibilityLabel so icon-only actions are identifiable."
+  },
+  {
+    "id": "blocking-spinner-everywhere",
+    "category": "state",
+    "pattern": "Blocking full-screen spinner",
+    "severity": "MEDIUM",
+    "source": "combined",
+    "evidence": "DashboardView.swift:100 + render",
+    "fix": "Use .redacted(reason: .placeholder) skeletons to reserve content shape; keep the spinner for short indeterminate waits."
+  },
+  {
+    "id": "no-reduced-motion-respect",
+    "category": "motion",
+    "pattern": "Animation ignores Reduce Motion",
+    "severity": "CRITICAL",
+    "source": "code",
+    "evidence": "DashboardView.swift:112",
+    "fix": "Gate every non-essential animation on @Environment(\\.accessibilityReduceMotion); prefer opacity over translation."
+  }
+]

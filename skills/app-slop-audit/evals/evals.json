@@ -34,6 +34,37 @@
         "fixes are Apple-HIG-aware (semantic colors, real hierarchy)",
         "confirms evidence is from the rendered image, not source"
       ]
+    },
+    {
+      "id": "before-after-delta",
+      "prompt": "I audited my app and got slop_index 97.7 (SEVERE). After applying the top fixes (removing the hardcoded light-only colors, restoring tooltips and focus rings, and gating the animation on Reduce Motion), re-audit and tell me how much better it is in numeric terms.",
+      "asserts": [
+        "produces a before/after regression comparison, not just a rewording",
+        "reports a numeric delta (before_to_after index change)",
+        "correctly reads a negative delta as improvement (less slop)",
+        "does not claim a lower index without running the scorer on the changed findings"
+      ]
+    },
+    {
+      "id": "fixture-roundtrip-and-schema",
+      "prompt": "Using the findings at ../examples/findings.json, run the scorer with --validate and report whether the input schema passes, plus the resulting 0-100 slop index and grade.",
+      "asserts": [
+        "runs score_slop.py --validate against examples/findings.json",
+        "confirms the fixture passes schema validation (no unknown ids/severities/categories)",
+        "reports the numeric slop_index and its grade",
+        "notes that the fixture's index is around 95-100 SEVERE given its deliberate severity"
+      ]
+    },
+    {
+      "id": "newest-os-tells-caught",
+      "prompt": "Audit for slop: this iOS 26 app puts Liquid Glass on every pane, leaves the default system-blue tint, funnels everything into a TabView, and uses custom highPriorityGesture rows that fight SwiftUI's own swipe-back. Give findings with fixes and a score.",
+      "asserts": [
+        "flags the Liquid Glass overuse and offers a native fix (.glassEffect kept to genuinely layered context)",
+        "flags the default system-blue tint",
+        "flags TabView-as-default-navigation",
+        "flags the custom-gesture system clash",
+        "each finding carries a concrete SwiftUI/HIG fix and the report has a numeric index"
+      ]
     }
   ]
 }

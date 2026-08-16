@@ -1,0 +1,69 @@
+{
+  "name": "app-slop-audit-patterns",
+  "version": 2,
+  "description": "Machine-readable pattern catalog. Single source of truth for the scoring weights and the pattern-id register. Consumed by scripts/score_slop.py and referenced by references/slop-patterns.md (the human prose catalog).",
+  "severity_weights": {
+    "CRITICAL": 5.0,
+    "HIGH": 3.0,
+    "MEDIUM": 1.5,
+    "LOW": 0.5
+  },
+  "category_weights": {
+    "color": 1.4,
+    "typography": 1.3,
+    "layout": 1.3,
+    "controls": 1.2,
+    "content": 1.2,
+    "material": 1.1,
+    "state": 1.1,
+    "icon": 1.0,
+    "motion": 1.0,
+    "accessibility": 1.6
+  },
+  "evidence_weights": {
+    "code": 1.0,
+    "screenshot": 0.8,
+    "combined": 1.15
+  },
+  "scoring": {
+    "ceiling": 45.0,
+    "count_reference": 20,
+    "count_boost": 4.0,
+    "ceiling_note": "100 maps to ~45 category-weighted units. A uniformly medium-sloppy app across all 10 categories at confirmed evidence totals ~21 units (~47 index); the top of the scale is reserved for escalating CRITICAL/HIGH density, so a broadly-sloppy-but-not-catastrophic app lands mid-to-upper NOTICEABLE..SEVERE instead of saturating."
+  },
+  "patterns": [
+    { "id": "type-flat-scale",                 "category": "typography", "severity": "HIGH",     "title": "Flat type scale" },
+    { "id": "bold-as-only-emphasis",           "category": "typography", "severity": "MEDIUM",   "title": "Bold-as-only-emphasis" },
+    { "id": "serif-for-creative-autopilot",    "category": "typography", "severity": "MEDIUM",   "title": "Serif-for-creative autopilot" },
+    { "id": "monospace-misuse",                "category": "typography", "severity": "LOW",      "title": "Monospace misuse" },
+    { "id": "ai-purple-blue-accent",           "category": "color",      "severity": "HIGH",     "title": "AI-purple/blue default accent" },
+    { "id": "hardcoded-light-only-colors",     "category": "color",      "severity": "CRITICAL", "title": "Hardcoded light-only colors" },
+    { "id": "warm-beige-premium-autopilot",    "category": "color",      "severity": "HIGH",     "title": "Warm-beige premium autopilot" },
+    { "id": "background-gradient-slop",        "category": "color",      "severity": "MEDIUM",   "title": "Background gradient slop" },
+    { "id": "ios-default-system-blue-tint",    "category": "color",      "severity": "HIGH",     "title": "iOS default system-blue tint" },
+    { "id": "material-glass-everywhere",       "category": "material",   "severity": "HIGH",     "title": "Material/glass everywhere" },
+    { "id": "rounded-rect-card-overload",      "category": "material",   "severity": "HIGH",     "title": "Rounded-rect card overload" },
+    { "id": "inconsistent-corner-radius",      "category": "material",   "severity": "MEDIUM",   "title": "Inconsistent corner radius" },
+    { "id": "liquid-glass-overuse",            "category": "material",   "severity": "HIGH",     "title": "Liquid Glass on everything" },
+    { "id": "shadow-misuse",                   "category": "layout",     "severity": "LOW",      "title": "Shadow misuse" },
+    { "id": "fixed-frame-layout",              "category": "layout",     "severity": "CRITICAL", "title": "Fixed-frame layout" },
+    { "id": "floating-centered-island",        "category": "layout",     "severity": "HIGH",     "title": "Floating centered island" },
+    { "id": "inconsistent-alignment",          "category": "layout",     "severity": "HIGH",     "title": "One-config the other does not match" },
+    { "id": "divider-padding-stacking",        "category": "layout",     "severity": "LOW",      "title": "Divider / padding stacking" },
+    { "id": "crispness-no-anti-alias",         "category": "layout",     "severity": "LOW",      "title": "No anti-alias / crispness care" },
+    { "id": "ios-tabview-as-default-nav",      "category": "layout",     "severity": "HIGH",     "title": "TabView as default navigation" },
+    { "id": "ios-sheet-fullscreen-misuse",     "category": "layout",     "severity": "MEDIUM",   "title": "Sheet vs full-screen misuse" },
+    { "id": "custom-native-reimplementation",  "category": "controls",   "severity": "HIGH",     "title": "Custom reimplementation of native controls" },
+    { "id": "plain-button-everything",         "category": "controls",   "severity": "HIGH",     "title": "Plain-button everything" },
+    { "id": "all-bordered-no-primary",         "category": "controls",   "severity": "MEDIUM",   "title": "All-bordered, no primary" },
+    { "id": "removed-focus-feedback",          "category": "controls",   "severity": "CRITICAL", "title": "Removed focus / feedback" },
+    { "id": "icon-only-no-label",              "category": "controls",   "severity": "CRITICAL", "title": "Icon-only with no label" },
+    { "id": "ios-system-gesture-clash",        "category": "controls",   "severity": "HIGH",     "title": "System-gesture clash" },
+    { "id": "placeholder-slop",                "category": "content",    "severity": "CRITICAL", "title": "Placeholder-slop" },
+    { "id": "emoji-as-icons",                  "category": "icon",       "severity": "MEDIUM",   "title": "Emoji as icons" },
+    { "id": "inconsistent-symbol-style",       "category": "icon",       "severity": "MEDIUM",   "title": "Inconsistent SF Symbol style" },
+    { "id": "blocking-spinner-everywhere",     "category": "state",      "severity": "MEDIUM",   "title": "Blocking spinner everywhere" },
+    { "id": "infinite-decorative-motion",      "category": "motion",     "severity": "MEDIUM",   "title": "Infinite decorative motion" },
+    { "id": "no-reduced-motion-respect",       "category": "motion",     "severity": "CRITICAL", "title": "No reduced-motion respect" }
+  ]
+}

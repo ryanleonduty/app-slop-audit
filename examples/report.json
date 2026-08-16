@@ -1,0 +1,35 @@
+{
+  "slop_index": 97.7,
+  "grade": "SEVERE slop \u2014 needs a redesign pass, not a polish.",
+  "finding_count": 10,
+  "categories": {
+    "color": {
+      "count": 2,
+      "weighted": 8.8
+    },
+    "controls": {
+      "count": 2,
+      "weighted": 8.0
+    },
+    "material": {
+      "count": 2,
+      "weighted": 5.4
+    },
+    "motion": {
+      "count": 1,
+      "weighted": 5.0
+    },
+    "typography": {
+      "count": 1,
+      "weighted": 3.4
+    },
+    "layout": {
+      "count": 1,
+      "weighted": 3.0
+    },
+    "state": {
+      "count": 1,
+      "weighted": 1.7
+    }
+  }
+}

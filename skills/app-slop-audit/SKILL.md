@@ -39,12 +39,21 @@ Cross-checks SwiftUI/AppKit code against the rendered UI, then scores the result
    `cat findings.json | python3 scripts/score_slop.py` → slop index, grade, per-category breakdown.
 6. **Report.** State the Design Read (one line: "Reading this as <app kind> for <audience>,
    lean <aesthetic>"), the inventory table, the slop index + grade, and the top 5 highest-value
-   fixes. Never fix code unasked — audit first, then offer to apply.
+   fixes. **Top-5 ranking rule**: sort fixable findings by `severity_weight × category_weight`
+   (descending), tie-broken by severity — never by row order. Never fix code unasked — audit first,
+   then offer to apply.
+7. **Before/after (optional).** If the user applies fixes, re-audit and pass
+   `{"before": [...], "after": [...]}` to `scripts/score_slop.py`; read the printed `delta` as the
+   regression grade (negative = improvement). Compare against the initial index, never by feel.
 
 ## Scope
 This skill handles native Apple app UI design audit and slop remediation. It does NOT
 handle: generating new designs from scratch (taste-skill), web/frontend slop, or CX/
 product-strategy decisions.
+
+The pattern catalog's code signals are written for **SwiftUI** (macOS + iOS). For a legacy
+**AppKit** app, apply the same categories and severity tiers, translating the signals per the
+scope note in `references/slop-patterns.md`; use `XcodeBuildMCP` for a rendered read.
 
 ## Rules
 - **Audit-first, fix-on-request.** Produce findings and fixes; apply changes only when asked.
@@ -58,8 +67,12 @@ product-strategy decisions.
 
 ## References
 - `references/slop-patterns.md` — the pattern catalog (detection + anti-slop fixes).
-- `references/apple-hig.md` — native HIG replacements and macOS-specific verbs.
+- `references/apple-hig.md` — native HIG replacements and macOS/iOS-specific verbs.
 - `references/scan-methods.md` — code / screenshot / combined evidence-gathering.
-- `scripts/score_slop.py` — JSON findings → 0-100 slop index.
+- `references/patterns.json` — machine-readable catalog: pattern ids, severity/category/evidence
+  weights, and the scoring ceiling (single source of truth for the score).
+- `scripts/score_slop.py` — JSON findings → 0-100 slop index (`+ --validate`, before/after delta).
+- `tests/test_score_slop.py` — self-running unit tests for the scorer (run in CI).
+- `../examples/findings.json` + `../examples/report.json` — a worked example audit and its report.
 
 For requesting live renders on macOS, prefer `XcodeBuildMCP` (`session_show_defaults` → build/run → screenshot) when defaults are configured.

@@ -12,6 +12,14 @@ the model shipped because it defaulted instead of read the room. Each pattern li
 Every check is **contextual**. Do not flag a rule just because it appears; flag it when the
 app does not justify the choice. A brutalist tool for a power user may legitimately break a "polish" rule.
 
+> **Scope note (SwiftUI / AppKit).** The code signals below are written for **SwiftUI** (the common
+> case; `macOS` and `iOS`). For a legacy **AppKit** app (NSTableView, NSVisualEffectView, `#selector`
+> targets, `.appearance`), the same *categories and severity tiers* apply, but translate the signals:
+> AppKit slop shows up as `NSVisualEffectView` behind flat content, hand-rolled cell drawing instead
+> of system cell views, hardcoded `NSColor` RGB, focus ring removal via `focusRingType = .none`, and
+> no VoiceOver (`.setAccessibilityLabel`) on icon-only buttons. Reuse `references/patterns.json` for
+> the id, category, and severity registers; this file is the human description of each.
+
 ## A. Typography & type hierarchy
 
 1. **Flat type scale**
@@ -175,13 +183,55 @@ app does not justify the choice. A brutalist tool for a power user may legitimat
     - Visual: fuzzy borders, inconsistent weight.
     - Severity: LOW.
 
----
-## Severity weight map (for the score index)
-| Severity | Weight |
-|----------|--------|
-| CRITICAL | 5.0 |
-| HIGH | 3.0 |
-| MEDIUM | 1.5 |
-| LOW | 0.5 |
+## J. Modern OS tells — Liquid Glass & iOS defaults
 
-Score = normalized sum of weighted findings; see `scripts/score_slop.py`.
+The newest AI-default reflexes. macOS Tahoe / iOS 26 (2025) shipped Liquid Glass, and the model's
+default is to apply it everywhere — the modern successor to the purple-gradient tell.
+
+29. **Liquid Glass on everything**
+    - Code: `.glassEffect()` / `.glassEffectGrouped()` / `.liquiphorm` (`iOS 26+`, `macOS Tahoe`) as the
+      default surface for rows, panes, toolbars, headers; glass applied before deciding what sits behind it.
+    - Visual: every element looks floating/reflective, nothing rests on a solid surface; the whole app
+      reads as "just applied default glass".
+    - Severity: HIGH (the current `iOS`/`macOS` AI-tell).
+    - Fix: apply glass only where layered context exists — inspector/detached panels, transient chrome,
+      content over a scrolling backdrop. Default to flat `.background`/`.fill` sheets and semantic fills;
+      confirm real depth lives behind any glass.
+
+30. **iOS default system-blue tint**
+    - Code: `.tint(.blue)` or unset `accentColor` left on iOS screens; every button/tab/segment renders
+      system blue; no deliberate accent.
+    - Visual: the app looks like a default Xcode template; indistinguishable from every other default app.
+    - Severity: HIGH.
+    - Fix: set one deliberate `tint`/`accentColor` from the brand (non-default hue), or consciously keep
+      system blue only for system-provided interactive elements and vary emphasis by role.
+
+31. **TabView as default navigation**
+    - Code: everything funneled into a `TabView` with generic `Label("", systemImage:)` items, even when
+      the content has real depth; tabs as a layout reflex rather than a fit for 2-5 peer sections.
+    - Visual: a row of tabs over content that would read better as a stack; tab chrome the model "just added".
+    - Severity: HIGH.
+    - Fix: pick navigation for the content's depth — `NavigationStack` drill-down for hierarchical data,
+      tabs only when there are genuinely 2-5 peer sections. Match chrome to content, not the other way round.
+
+32. **System-gesture clash**
+    - Code: custom `.gesture`/`.onTapGesture`-heavy rows, `highPriorityGesture`, or long-press reimplements
+      that fight `ScrollView`, swipe-back, or system long-press on iOS.
+    - Visual: interactions that overshoot, swallow scroll, or mis-trigger the system back/context gestures.
+    - Severity: HIGH (breaks platform muscle memory).
+    - Fix: prefer system gestures (`swipeActions`, `Button`/`ButtonStyle`, `.contextMenu`); reach for
+      `.simultaneousGesture`/`.highPriorityGesture` only with a documented reason.
+
+33. **Sheet vs full-screen misuse**
+    - Code: content that should be a full immersive flow presented as a `.sheet` (or a lightweight confirm
+      as `.fullScreenCover`), chosen by default rather than fit.
+    - Visual: cramped or over-modal chrome for the task.
+    - Severity: MEDIUM.
+    - Fix: `.sheet` for modals light enough to dismiss; `.fullScreenCover` for immersive/focused flows.
+      Match presentation to the task's needed attention.
+
+---
+## Scoring (see `references/patterns.json`)
+Severity, category, and evidence weights plus the index ceiling live in the single source of truth:
+`references/patterns.json`. `scripts/score_slop.py` reads that file and never hardcodes a weight.
+Score = category-weighted, evidence-weighted, count-capped sum of findings mapped to 0-100.

@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  skill-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 1. Unit tests for the scorer (self-running, no deps).
+      - name: Run score_slop unit tests
+        run: python3 skills/app-slop-audit/tests/test_score_slop.py
+
+      # 2. The example findings must satisfy the schema (no unknown ids/severities/...).
+      - name: Validate example findings schema
+        run: python3 skills/app-slop-audit/scripts/score_slop.py --validate examples/findings.json
+
+      # 3. Weights/pattern ids in patterns.json must be internally consistent.
+      - name: Check patterns.json register integrity
+        run: python3 - <<'PY'
+          import json, sys
+          cfg = json.load(open("skills/app-slop-audit/references/patterns.json"))
+          ids = [p["id"] for p in cfg["patterns"]]
+          assert len(ids) == len(set(ids)), "duplicate pattern ids"
+          for p in cfg["patterns"]:
+              assert p["severity"] in cfg["severity_weights"], p["id"]
+              assert p["category"] in cfg["category_weights"], p["id"]
+          # Every register title must read as an entry in the prose catalog, so the
+          # machine register never invents a pattern the human catalog doesn't describe.
+          import re
+          def norm(s): return re.sub(r"[^a-z0-9]", "", s.lower())
+          prose = norm(open("skills/app-slop-audit/references/slop-patterns.md", encoding="utf-8").read())
+          missing = [p["title"] for p in cfg["patterns"] if norm(p["title"]) not in prose]
+          assert not missing, f"titles without a prose entry: {missing}"
+          print(f"patterns.json OK: {len(ids)} ids, weights consistent, all titles in prose catalog")
+          PY
+
+      # 4. The example report must be reproducible from the fixture via the scorer.
+      - name: Regenerate example report from fixture
+        run: |
+          python3 skills/app-slop-audit/scripts/score_slop.py examples/findings.json > /tmp/report.json
+          python3 - <<'PY'
+          import json
+          expected = json.load(open("examples/report.json"))
+          actual = json.load(open("/tmp/report.json"))
+          assert expected == actual, "examples/report.json is stale — regenerate from the fixture"
+          print("examples/report.json is current")
+          PY
