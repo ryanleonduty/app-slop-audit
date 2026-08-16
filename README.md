@@ -117,35 +117,66 @@ The output is always reproducible from the same findings JSON.
 
 ## Installation
 
-### As a Claude Code skill (plugin marketplace)
+There are three ways to use this skill: as a **Claude Code plugin**, with the **`agent-skills` CLI**,
+or by **copying the files** into your project. Pick whichever fits.
 
-Add this repo as a marketplace, then install the skill:
+### Option 1 - Claude Code (plugin marketplace) — recommended
 
-```bash
-/claude mcp add app-slop-audit -- marketplace https://github.com/ryanleonduty/app-slop-audit
-```
+1. Add this repo as a marketplace inside Claude Code:
 
-Or reference `.claude-plugin/marketplace.json` directly when adding the plugin.
+   ```bash
+   claude plugin marketplace add https://github.com/ryanleonduty/app-slop-audit
+   ```
 
-### With the `agent-skills` CLI
+2. Install the skill from that marketplace:
 
-The repo follows the [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
-convention (each skill in `skills/<name>/` with a `SKILL.md`), so it installs with `npx skills add`:
+   ```bash
+   claude plugin install app-slop-audit@app-slop-audit
+   ```
+
+   Or, inside an interactive Claude Code session, use the `/plugin` command and follow the prompts,
+   choosing the `app-slop-audit` marketplace you just added, then install the `app-slop-audit` plugin.
+
+   > The exact command names can vary slightly by Claude Code version. If a command is unrecognized,
+   > run `/help` and use the `/plugin` menu instead.
+
+### Option 2 - `agent-skills` CLI (`npx skills add`)
+
+This repo follows the [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
+convention (each skill in `skills/<name>/` with a `SKILL.md`), so it installs with:
 
 ```bash
 npx skills add https://github.com/ryanleonduty/app-slop-audit
 ```
 
-Install the single skill by its install name (the `name:` field in the SKILL frontmatter):
+To install the single skill by its install name (the `name:` field in the SKILL frontmatter):
 
 ```bash
 npx skills add https://github.com/ryanleonduty/app-slop-audit --skill "app-slop-audit"
 ```
 
-You can also copy `skills/app-slop-audit/SKILL.md` and its `references/`, `scripts/`, `agents/`,
-and `evals/` folders into your project, or paste them into a Claude/Codex/ChatGPT conversation.
+### Option 3 - Manual copy (works in Claude, Codex, ChatGPT)
+
+Copy the whole `skills/app-slop-audit/` folder into your project's skills directory, or paste its
+`SKILL.md` (plus the `references/`, `scripts/`, `agents/`, `evals/` subfolders) into a conversation.
+
+```bash
+cp -r skills/app-slop-audit ~/.claude/skills/app-slop-audit
+```
 
 ---
+
+## Quick start
+
+Once installed, just ask for an audit in plain language:
+
+> "Audit this SwiftUI app for slop. It uses `.tint(.purple)`, a `RoundedRectangle(cornerRadius: 16)`
+> around every row, `.font(.body)` on all text, and a blocking full-screen `ProgressView`. Give me a
+> numbered slop inventory with anti-slop fixes and a scored index."
+
+The skill will ask what evidence you have, run the scan, produce a findings table, and score it
+through `scripts/score_slop.py` — a reproducible 0-100 index. It audits first and only fixes code
+when you ask.
 
 ## Usage
 
