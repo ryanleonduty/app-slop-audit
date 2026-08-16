@@ -1,5 +1,9 @@
 # App Slop Audit
 
+<div align="left">
+<a href="https://github.com/ryanleonduty/app-slop-audit/actions/workflows/ci.yml"><img src="https://github.com/ryanleonduty/app-slop-audit/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+</div>
+
 **Audit a native macOS / iOS app (SwiftUI / AppKit) for UI slop - generic, templated,
 AI-default design - and get a numbered slop inventory, concrete anti-slop fixes, an
 Apple-HIG-aware remediation recipe, and an objective 0-100 slop index.**
