@@ -86,9 +86,10 @@ The skill lives in `skills/app-slop-audit/`.
 | `scripts/score_slop.py` | Deterministic scorer: `cat findings.json \| python3 scripts/score_slop.py` → index + grade + breakdown. Adds `--validate`, evidence weighting, and before/after delta. |
 | `tests/test_score_slop.py` | Self-running unit tests for the scorer (no dependencies; runs in CI). |
 | `examples/findings.json` + `examples/report.json` | A worked example audit and its generated report (regenerated in CI). |
+| `examples/before-after.json` + `examples/before-after-report.json` | A before/after redesign example - `97.7 SEVERE → 23.0 LEAN`, `delta −74.7` - and its generated report. |
 | `agents/grader.md` | Eval grader agent that scores a run against the assertion set. |
 | `evals/evals.json` | Evaluations - concrete cases with PASS/FAIL assertions for verifying behavior. |
-| `.github/workflows/ci.yml` | CI: unit tests + schema validation + register integrity + report reproducibility. |
+| `.github/workflows/ci.yml` | CI: unit tests + schema validation + register integrity + both example reports' reproducibility. |
 
 ### Detected pattern categories (from `slop-patterns.md`)
 

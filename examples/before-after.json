@@ -1,0 +1,159 @@
+{
+  "before": [
+    {
+      "id": "ai-purple-blue-accent",
+      "category": "color",
+      "pattern": "AI-purple accent defaults",
+      "severity": "HIGH",
+      "source": "code",
+      "evidence": "DashboardView.swift:12",
+      "fix": "Drop .tint(.purple); use one high-contrast brand accent (emerald), saturation < 80%."
+    },
+    {
+      "id": "hardcoded-light-only-colors",
+      "category": "color",
+      "pattern": "Hardcoded light-only background",
+      "severity": "CRITICAL",
+      "source": "combined",
+      "evidence": "DashboardView.swift:18 + dark-mode render",
+      "fix": "Replace Color(red::) with semantic system colors so dark mode adapts."
+    },
+    {
+      "id": "type-flat-scale",
+      "category": "typography",
+      "pattern": "Flat type scale",
+      "severity": "HIGH",
+      "source": "combined",
+      "evidence": "DashboardView.swift:34 + screenshot",
+      "fix": "Lead sections with .title2, content .body, metadata .caption."
+    },
+    {
+      "id": "rounded-rect-card-overload",
+      "category": "material",
+      "pattern": "Rounded-rect card overload",
+      "severity": "HIGH",
+      "source": "code",
+      "evidence": "DashboardView.swift:27, 41, 66",
+      "fix": "One containment idiom for one content layer; leave secondary rows flat."
+    },
+    {
+      "id": "liquid-glass-overuse",
+      "category": "material",
+      "pattern": "Liquid Glass on every pane",
+      "severity": "HIGH",
+      "source": "screenshot",
+      "evidence": "main-window-screen.png",
+      "fix": "Restrict .glassEffect to layered context; default to flat .background/.fill sheets."
+    },
+    {
+      "id": "floating-centered-island",
+      "category": "layout",
+      "pattern": "Floating centered island",
+      "severity": "HIGH",
+      "source": "code",
+      "evidence": "DashboardView.swift:70",
+      "fix": "Use real app chrome (toolbar + NavigationSplitView sidebar)."
+    },
+    {
+      "id": "plain-button-everything",
+      "category": "controls",
+      "pattern": "Plain-button everything",
+      "severity": "HIGH",
+      "source": "code",
+      "evidence": "DashboardView.swift:88",
+      "fix": ".borderedProminent primary, .bordered secondary, .plain only in toolbars."
+    },
+    {
+      "id": "icon-only-no-label",
+      "category": "controls",
+      "pattern": "Icon-only toolbar, no tooltip",
+      "severity": "CRITICAL",
+      "source": "code",
+      "evidence": "ToolbarView.swift:5",
+      "fix": "Add .help(Text(...)) on macOS and accessibilityLabel on every icon action."
+    },
+    {
+      "id": "blocking-spinner-everywhere",
+      "category": "state",
+      "pattern": "Blocking full-screen spinner",
+      "severity": "MEDIUM",
+      "source": "combined",
+      "evidence": "DashboardView.swift:100 + render",
+      "fix": "Use .redacted(reason: .placeholder) skeletons; keep the spinner for short waits."
+    },
+    {
+      "id": "no-reduced-motion-respect",
+      "category": "motion",
+      "pattern": "Animation ignores Reduce Motion",
+      "severity": "CRITICAL",
+      "source": "code",
+      "evidence": "DashboardView.swift:112",
+      "fix": "Gate every non-essential animation on @Environment(\\.accessibilityReduceMotion)."
+    }
+  ],
+  "after": [
+    {
+      "id": "ai-purple-blue-accent",
+      "category": "color",
+      "pattern": "Accent saturation still high",
+      "severity": "MEDIUM",
+      "source": "code",
+      "evidence": "DashboardView.swift:12",
+      "fix": "Pull accent saturation under 80% now that the palette is swapped away from purple."
+    },
+    {
+      "id": "type-flat-scale",
+      "category": "typography",
+      "pattern": "Lead could be stronger",
+      "severity": "MEDIUM",
+      "source": "combined",
+      "evidence": "DashboardView.swift:34 + render",
+      "fix": "Raise the section lead one step (.largeTitle) so it clears body by 4+ steps."
+    },
+    {
+      "id": "rounded-rect-card-overload",
+      "category": "material",
+      "pattern": "Cards reduced but secondary rows still boxed",
+      "severity": "MEDIUM",
+      "source": "code",
+      "evidence": "DashboardView.swift:41",
+      "fix": "Let metadata rows sit flat on the background; keep one containment layer."
+    },
+    {
+      "id": "liquid-glass-overuse",
+      "category": "material",
+      "pattern": "Glass left on inspector panel",
+      "severity": "LOW",
+      "source": "code",
+      "evidence": "DashboardView.swift:60",
+      "fix": "Confirm the inspector has real scroll content behind the glass, else swap to .fill."
+    },
+    {
+      "id": "floating-centered-island",
+      "category": "layout",
+      "pattern": "Minor residual centering on empty state",
+      "severity": "LOW",
+      "source": "combined",
+      "evidence": "EmptyStateView.swift:15",
+      "fix": "Respect a left-anchored content region now that the main chrome is real."
+    },
+    {
+      "id": "plain-button-everything",
+      "category": "controls",
+      "pattern": "Secondary actions still plain",
+      "severity": "MEDIUM",
+      "source": "code",
+      "evidence": "DashboardView.swift:90",
+      "fix": "Give secondary actions .bordered now that the primary is .borderedProminent."
+    },
+    {
+      "id": "blocking-spinner-everywhere",
+      "category": "state",
+      "pattern": "Long-load path still spins mid-list",
+      "severity": "LOW",
+      "source": "combined",
+      "evidence": "DashboardView.swift:100",
+      "fix": "Skeleton the unchanged rows during the refresh instead of a mid-list spinner."
+    }
+  ]
+}

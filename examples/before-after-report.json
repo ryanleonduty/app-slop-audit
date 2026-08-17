@@ -1,0 +1,39 @@
+{
+  "before": {
+    "slop_index": 97.7,
+    "grade": "SEVERE slop \u2014 needs a redesign pass, not a polish."
+  },
+  "after": {
+    "slop_index": 23.0,
+    "grade": "LEAN \u2014 minor inconsistencies only.",
+    "finding_count": 7,
+    "categories": {
+      "material": {
+        "count": 2,
+        "weighted": 2.0
+      },
+      "typography": {
+        "count": 1,
+        "weighted": 1.7
+      },
+      "color": {
+        "count": 1,
+        "weighted": 1.5
+      },
+      "controls": {
+        "count": 1,
+        "weighted": 1.5
+      },
+      "layout": {
+        "count": 1,
+        "weighted": 0.6
+      },
+      "state": {
+        "count": 1,
+        "weighted": 0.6
+      }
+    }
+  },
+  "delta": -74.7,
+  "delta_note": "Negative delta means less slop (improvement)."
+}

@@ -31,6 +31,8 @@ Robustness, calibration, and deeper platform coverage.
 - **`--validate`** flag - schema check (unknown id/severity/category/source) with nonzero exit.
 - **`tests/test_score_slop.py`** - 20 self-running unit tests (no dependencies).
 - **`examples/findings.json` + `examples/report.json`** - a worked example audit and its report.
+- **`examples/before-after.json` + `examples/before-after-report.json`** - a before/after redesign
+  example (`97.7 SEVERE -> 23.0 LEAN`, `delta -74.7`) and its generated report.
 - **`.github/workflows/ci.yml`** - runs unit tests, schema validation, register-integrity/title
   cross-check, and report reproducibility on every push/PR.
 - **New patterns (J)** - Liquid Glass on everything, iOS default system-blue tint, TabView-as-default

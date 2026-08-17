@@ -55,3 +55,16 @@ jobs:
           assert expected == actual, "examples/report.json is stale - regenerate from the fixture"
           print("examples/report.json is current")
           PY
+
+      # 5. The before/after example report must likewise regenerate from its fixture.
+      - name: Regenerate before-after report from fixture
+        run: |
+          python3 skills/app-slop-audit/scripts/score_slop.py examples/before-after.json > /tmp/ba-report.json
+          python3 - <<'PY'
+          import json
+          expected = json.load(open("examples/before-after-report.json"))
+          actual = json.load(open("/tmp/ba-report.json"))
+          assert expected == actual, "examples/before-after-report.json is stale - regenerate from the fixture"
+          assert expected["delta"] < 0, "before-after example should be an improvement (delta < 0)"
+          print("examples/before-after-report.json is current (delta=", expected["delta"], ")")
+          PY
